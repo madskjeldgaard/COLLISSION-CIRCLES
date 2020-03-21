@@ -106,7 +106,7 @@ void ofApp::draw() {
   ofSetColor(col2);
   ofDrawCircle(pos2, radius2);
 }
-//--------------------------------------------------------------
+
 void ofApp::sendOsc() {
   bundle.clear();
   string addRoot = "/of/circle";
