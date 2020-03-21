@@ -13,7 +13,7 @@ void ofApp::setup() {
   ofSetWindowTitle(ofToString(ofGetFrameRate()));
 
   // Constrain raidus of circles to these values
-  minRadius = 10;
+  minRadius = ofGetScreenHeight() / 10;
   maxRadius = ofGetScreenHeight() / 4;
 
   // init radii of circles
@@ -62,7 +62,7 @@ void ofApp::update() {
   // Radius
   radiusMsg.clear();
   radiusMsg.setAddress(addRoot + "/1/radius");
-  radiusMsg.addFloatArg(radius1);
+  radiusMsg.addFloatArg(radius1 / maxRadius);
   bundle.addMessage(radiusMsg);
 
   // X pos (normalized)
@@ -97,26 +97,26 @@ void ofApp::update() {
 
   // Movements
   if ((pos1.x + radius1) <= width)
-    pos1.x = ofClamp(pos1.x + (sin(time * 3 + ofRandom(-10, 10))) * 10, 0,
+    pos1.x = ofClamp(pos1.x + (sin(time * 3 + ofRandom(-1, 1))) * 20, 0,
                      width - radius1);
   else
     pos1.x -= radius1;
 
   if ((pos1.y + radius1) <= height)
-    pos1.y = ofClamp(pos1.y + (sin(time * 5) + ofRandom(-10, 10)) * 10, 0,
-                     height - radius1);
+    pos1.y = ofClamp(pos1.y + (sin(ofRandom(time * 3 + ofRandom(-1, 1)))) * 20,
+                     0, width - radius1);
   else
     pos1.y -= 1;
 
   if ((pos2.x + radius2) <= width)
-    pos2.x = ofClamp(pos2.x + (cos(time * sin(pos1.x * 3))) * 10, 0,
-                     width - radius2);
+    pos2.x = ofClamp(pos2.x + (sin(ofRandom(time * 3 + ofRandom(-1, 1)))) * 20,
+                     0, width - radius2);
   else
     pos2.x -= 1;
 
   if ((pos2.y + radius2) <= height)
-    pos2.y =
-        ofClamp(pos2.y + (sin(time * ofRandom(2, -2))), 0, height - radius2);
+    pos2.y = ofClamp(pos2.y + (sin(time * 5) + ofRandom(-1, 1)) * 10, 0,
+                     height - radius2);
   else
     pos2.y -= 1;
 
