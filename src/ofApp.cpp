@@ -36,46 +36,15 @@ void ofApp::setup() {
 
   oscSender.setup(oscSettings);
 
-  m1.setAddress("/helloFromOF/");
-  m1.addIntArg(666);
+  hasCollided = false;
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
   auto time = ofGetElapsedTimef();
-  auto width = ofGetScreenWidth();
-  auto height = ofGetScreenHeight();
   auto distance = pos1.distance(pos2);
-
-  // OSC STUFF
-
-  // Send OSC
-  bundle.clear();
-  string addRoot = "/of/circle";
-
-  // Collision message
-  collision.clear();
-  collision.setAddress(addRoot + "/1/collision");
-  collision.addBoolArg(false);
-  bundle.addMessage(collision);
-
-  // Radius
-  radiusMsg.clear();
-  radiusMsg.setAddress(addRoot + "/1/radius");
-  radiusMsg.addFloatArg(radius1 / maxRadius);
-  bundle.addMessage(radiusMsg);
-
-  // X pos (normalized)
-  xMsg.clear();
-  xMsg.setAddress(addRoot + "/1/x");
-  xMsg.addFloatArg(pos1.x / width);
-  bundle.addMessage(xMsg);
-
-  // Y pos (normalized)
-  yMsg.clear();
-  yMsg.setAddress(addRoot + "/1/y");
-  yMsg.addFloatArg(pos1.y / width);
-  bundle.addMessage(yMsg);
+  width = ofGetScreenWidth();
+  height = ofGetScreenHeight();
 
   // Impact detection
   if (distance <= (radius1 + radius2)) {
@@ -85,15 +54,13 @@ void ofApp::update() {
     col2 = bgCol.getInverted();
 
     ofSetBackgroundColor(bgCol);
-    //
-    // Collision message
-    collision.clear();
-    collision.setAddress(addRoot + "/1/collision");
-    collision.addBoolArg(true);
-    bundle.addMessage(collision);
-  }
 
-  oscSender.sendBundle(bundle);
+    // Collision message
+    hasCollided = true;
+
+  } else {
+    hasCollided = false;
+  }
 
   // Movements
   if ((pos1.x + radius1) <= width)
@@ -120,16 +87,13 @@ void ofApp::update() {
   else
     pos2.y -= 1;
 
-  /*   pos1.x = ofClamp(pos1.x, 0, width); */
-  /*   pos2.x = ofClamp(pos2.x, 0, width); */
-
-  /*   pos1.y = ofClamp(pos1.y, 0, height); */
-  /* pos2.y = ofClamp(pos2.y, 0, height); */
-
   // Update radii
   radius1 = ofClamp(radius1 + ofRandom(-1, 1), minRadius, maxRadius);
   radius2 = ofClamp(radius2 * sin(ofNoise(time)) * 2 + minRadius, minRadius,
                     maxRadius);
+
+  // Send off osc bundle
+  sendOsc();
 }
 
 //--------------------------------------------------------------
@@ -142,6 +106,39 @@ void ofApp::draw() {
   ofSetColor(col2);
   ofDrawCircle(pos2, radius2);
 }
+
+void ofApp::sendOsc() {
+
+  // Send OSC
+  bundle.clear();
+  string addRoot = "/of/circle";
+
+  // Collision message
+  collision.clear();
+  collision.setAddress(addRoot + "/1/collision");
+  collision.addBoolArg(hasCollided);
+  bundle.addMessage(collision);
+
+  // Radius
+  radiusMsg.clear();
+  radiusMsg.setAddress(addRoot + "/1/radius");
+  radiusMsg.addFloatArg(radius1 / maxRadius);
+  bundle.addMessage(radiusMsg);
+
+  // X pos (normalized)
+  xMsg.clear();
+  xMsg.setAddress(addRoot + "/1/x");
+  xMsg.addFloatArg(pos1.x / width);
+  bundle.addMessage(xMsg);
+
+  // Y pos (normalized)
+  yMsg.clear();
+  yMsg.setAddress(addRoot + "/1/y");
+  yMsg.addFloatArg(pos1.y / width);
+  bundle.addMessage(yMsg);
+
+  oscSender.sendBundle(bundle);
+};
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {}

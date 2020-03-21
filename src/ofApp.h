@@ -4,6 +4,8 @@
 #include "ofxOsc.h"
 
 class ofApp : public ofBaseApp {
+private:
+  void sendOsc();
 
 public:
   void setup();
@@ -38,10 +40,13 @@ public:
   ofxOscSenderSettings oscSettings;
 
   ofxOscBundle bundle;
-  ofxOscMessage m1;
-
   ofxOscMessage radiusMsg;
   ofxOscMessage collision;
   ofxOscMessage xMsg;
   ofxOscMessage yMsg;
+
+  bool hasCollided;
+
+  float width;
+  float height;
 };
