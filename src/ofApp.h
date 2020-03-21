@@ -24,31 +24,21 @@ public:
   /*   void dragEvent(ofDragInfo dragInfo); */
   /*   void gotMessage(ofMessage msg); */
 
-  ofPoint pos1;
-  ofPoint pos2;
+  ofPoint pos1, pos2;
 
-  float radius1;
-  float radius2;
-  float minRadius;
-  float maxRadius;
+  float radius1, radius2, minRadius, maxRadius;
 
-  ofColor bgCol;
-  ofColor col1;
-  ofColor col2;
+  ofColor bgCol, col1, col2;
 
   ofxOscSender oscSender;
   ofxOscSenderSettings oscSettings;
 
   ofxOscBundle bundle;
-  ofxOscMessage radiusMsg;
-  ofxOscMessage collision;
-  ofxOscMessage xMsg;
-  ofxOscMessage yMsg;
+  ofxOscMessage radiusMsg, collision, xMsg, yMsg;
+  ofxOscMessage radiusMsg2, collision2, xMsg2, yMsg2;
 
   bool hasCollided;
 
-  float width;
-  float height;
-
+  float width, height;
   float seed1, seed2, seed3, seed4;
 };

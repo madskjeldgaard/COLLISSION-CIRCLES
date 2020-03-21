@@ -101,8 +101,10 @@ void ofApp::update() {
   pos2.y = ofNoise(time + seed4) * height;
 
   // Update radii
-  radius1 = ofClamp(radius1 + ofNoise(time + 4), minRadius, maxRadius);
-  radius2 = ofClamp(radius2 + ofNoise(time + 64), minRadius, maxRadius);
+  radius1 = ofClamp(radius1 + (sin(time + 4) * 1000 * ofNoise(time)), minRadius,
+                    maxRadius);
+  radius2 = ofClamp(radius2 + (sin(time + 751) * 1000 * ofNoise(time)),
+                    minRadius, maxRadius);
 
   // Send off osc bundle
   sendOsc();
@@ -146,6 +148,25 @@ void ofApp::sendOsc() {
   yMsg.setAddress(addRoot + "/1/y");
   yMsg.addFloatArg(pos1.y / width);
   bundle.addMessage(yMsg);
+
+  // Second circle
+  // Radius
+  radiusMsg2.clear();
+  radiusMsg2.setAddress(addRoot + "/2/radius");
+  radiusMsg2.addFloatArg(radius2 / maxRadius);
+  bundle.addMessage(radiusMsg2);
+
+  // X pos (normalized)
+  xMsg2.clear();
+  xMsg2.setAddress(addRoot + "/2/x");
+  xMsg2.addFloatArg(pos2.x / width);
+  bundle.addMessage(xMsg2);
+
+  // Y pos (normalized)
+  yMsg2.clear();
+  yMsg2.setAddress(addRoot + "/2/y");
+  yMsg2.addFloatArg(pos2.y / width);
+  bundle.addMessage(yMsg2);
 
   oscSender.sendBundle(bundle);
 };
