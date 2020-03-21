@@ -49,4 +49,6 @@ public:
 
   float width;
   float height;
+
+  float seed1, seed2, seed3, seed4;
 };

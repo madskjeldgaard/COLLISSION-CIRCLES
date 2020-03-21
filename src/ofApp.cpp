@@ -13,12 +13,18 @@ void ofApp::setup() {
   ofSetWindowTitle(ofToString(ofGetFrameRate()));
 
   // Constrain raidus of circles to these values
-  minRadius = ofGetScreenHeight() / 10;
-  maxRadius = ofGetScreenHeight() / 4;
+  minRadius = ofGetScreenHeight() / 30;
+  maxRadius = ofGetScreenHeight() / 10;
+
+  // Random seeds
+  seed1 = ofRandom(0.0, 1000);
+  seed2 = ofRandom(0.0, 1000);
+  seed3 = ofRandom(0.0, 1000);
+  seed4 = ofRandom(0.0, 1000);
 
   // init radii of circles
-  radius1 = 250;
-  radius2 = 250;
+  radius1 = 150;
+  radius2 = 150;
 
   // init position of circles
   pos1.set(ofGetScreenWidth() / 2 - radius1, ofGetScreenHeight() / 2);
@@ -75,22 +81,28 @@ void ofApp::update() {
   else
     pos1.y -= 1;
 
-  if ((pos2.x + radius2) <= width)
-    pos2.x = ofClamp(pos2.x + (sin(ofRandom(time * 3 + ofRandom(-1, 1)))) * 20,
-                     0, width - radius2);
-  else
-    pos2.x -= 1;
+  /*   if ((pos2.x + radius2) <= width) */
+  /*     pos2.x = ofClamp(pos2.x + (sin(ofRandom(time * 3 + ofRandom(-1, 1)))) *
+   * 20, */
+  /*                      0, width - radius2); */
+  /*   else */
+  /*     pos2.x -= 1; */
 
-  if ((pos2.y + radius2) <= height)
-    pos2.y = ofClamp(pos2.y + (sin(time * 5) + ofRandom(-1, 1)) * 10, 0,
-                     height - radius2);
-  else
-    pos2.y -= 1;
+  /*   if ((pos2.y + radius2) <= height) */
+  /*     pos2.y = ofClamp(pos2.y + (sin(time * 5) + ofRandom(-1, 1)) * 10, 0, */
+  /*                      height - radius2); */
+  /*   else */
+  /*     pos2.y -= 1; */
+
+  pos1.x = ofNoise(time + seed1) * width;
+  pos1.y = ofNoise(time + seed2) * height;
+
+  pos2.x = ofNoise(time + seed3) * width;
+  pos2.y = ofNoise(time + seed4) * height;
 
   // Update radii
-  radius1 = ofClamp(radius1 + ofRandom(-1, 1), minRadius, maxRadius);
-  radius2 = ofClamp(radius2 * sin(ofNoise(time)) * 2 + minRadius, minRadius,
-                    maxRadius);
+  radius1 = ofClamp(radius1 + ofNoise(time + 4), minRadius, maxRadius);
+  radius2 = ofClamp(radius2 + ofNoise(time + 64), minRadius, maxRadius);
 
   // Send off osc bundle
   sendOsc();
